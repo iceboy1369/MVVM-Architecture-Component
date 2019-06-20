@@ -1,10 +1,8 @@
 package ir.sanaitgroup.mvvm;
 
-import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,8 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
-
-import java.util.List;
 
 public class AddNoteActivity extends AppCompatActivity {
 
