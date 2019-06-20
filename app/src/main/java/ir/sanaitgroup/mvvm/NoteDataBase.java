@@ -1,12 +1,9 @@
 package ir.sanaitgroup.mvvm;
 
-import android.arch.persistence.db.SupportSQLiteDatabase;
 import android.arch.persistence.room.Database;
 import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
-import android.os.AsyncTask;
-import android.support.annotation.NonNull;
 
 @Database(entities = {Note.class},version = 1)
 public abstract class NoteDataBase extends RoomDatabase {
@@ -19,32 +16,32 @@ public abstract class NoteDataBase extends RoomDatabase {
             instance = Room.databaseBuilder(context.getApplicationContext()
                     ,NoteDataBase.class,"note_database")
                     .fallbackToDestructiveMigration()
-                    .addCallback(roomCallback)
-                    .build();
+                    .allowMainThreadQueries()
+                    .build(); //.addCallback(roomCallback)
         }
         return instance;
     }
 
-    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback(){
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            new PopulateDBAsyncTask(instance).execute();
-        }
-    };
-
-    private static class PopulateDBAsyncTask extends AsyncTask<Void,Void,Void> {
-        private NoteDao noteDao;
-
-        private PopulateDBAsyncTask(NoteDataBase db){
-            noteDao = db.noteDao();
-        }
-        @Override
-        protected Void doInBackground(Void... Voids) {
-            noteDao.insert(new Note("مرتضی","موحدیان",1));
-            noteDao.insert(new Note("مجید","محمودی",2));
-            noteDao.insert(new Note("حسین","غفاریان",3));
-            return null;
-        }
-    }
+//    private static RoomDatabase.Callback roomCallback = new RoomDatabase.Callback(){
+//        @Override
+//        public void onCreate(@NonNull SupportSQLiteDatabase db) {
+//            super.onCreate(db);
+//            new PopulateDBAsyncTask(instance).execute();
+//        }
+//    };
+//
+//    private static class PopulateDBAsyncTask extends AsyncTask<Void,Void,Void> {
+//        private NoteDao noteDao;
+//
+//        private PopulateDBAsyncTask(NoteDataBase db){
+//            noteDao = db.noteDao();
+//        }
+//        @Override
+//        protected Void doInBackground(Void... Voids) {
+//            noteDao.insert(new Note("مرتضی","موحدیان",1));
+//            noteDao.insert(new Note("مجید","محمودی",2));
+//            noteDao.insert(new Note("حسین","غفاریان",3));
+//            return null;
+//        }
+//    }
 }

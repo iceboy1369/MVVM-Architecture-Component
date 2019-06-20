@@ -1,14 +1,21 @@
 package ir.sanaitgroup.mvvm;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.NumberPicker;
 import android.widget.Toast;
+
+import java.util.List;
 
 public class AddNoteActivity extends AppCompatActivity {
 
@@ -17,8 +24,9 @@ public class AddNoteActivity extends AppCompatActivity {
     public static final String EXTRA_DESCRIPTION = "ir.sanaitgroup.mvvm.EXTRA_DESCRIPTION";
     public static final String EXTRA_PRIORITY = "ir.sanaitgroup.mvvm.EXTRA_PRIORITY";
 
-    private EditText editTextTitle, editTextDescription;
+    private EditText editTextTitle, editTextDescription, editTextSearch;
     private NumberPicker numberPickerPriority;
+    private Button btn_find;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,6 +36,16 @@ public class AddNoteActivity extends AppCompatActivity {
         editTextTitle = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         numberPickerPriority = findViewById(R.id.number_picker_priority);
+
+        editTextSearch = findViewById(R.id.edit_text_search);
+        btn_find = findViewById(R.id.btn_find);
+
+        btn_find.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                find_note();
+            }
+        });
 
         numberPickerPriority.setMinValue(1);
         numberPickerPriority.setMaxValue(10);
@@ -66,6 +84,20 @@ public class AddNoteActivity extends AppCompatActivity {
         }
         setResult(RESULT_OK,data);
         finish();
+    }
+
+    private void find_note(){
+        if (editTextSearch.getText().toString().trim().length()==0)
+            return;
+
+        int id = Integer.parseInt(editTextSearch.getText().toString());
+        NoteViewModel  noteViewModel = ViewModelProviders.of(this).get(NoteViewModel.class);
+        Note note = noteViewModel.getNoteById(id);
+        Toast.makeText(getApplicationContext(), "id: " + note.getId()
+                + " ,title: " + note.getTitle()
+                + " ,description: " + note.getDescription()
+                + " ,priority: " + note.getPriority(),Toast.LENGTH_SHORT).show();
+        editTextSearch.setText("");
     }
 
     @Override
